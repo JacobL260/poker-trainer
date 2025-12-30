@@ -1,30 +1,80 @@
-import pandas as pd
+import random
 
 CARDS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
-rank = {card: i for i, card in enumerate(CARDS)}
 
-card_grid = []
+POSITION_RANGES = {
+    "BB": ["22+", "A2s+", "A5o+", "K9s+", "KTo+", "Q9s+", "QTo+", "J9s+", "JTo", "T8s+", "98s", "87s", "76s", "65s", "54s"],
+    "SB": ["22+", "A2s+", "A2o+", "K7s+", "K9o+", "Q8s+", "QTo+", "J8s+", "JTo", "T7s+", "97s+", "87s", "76s", "65s", "54s"],
+    "BTN": ["22+", "A2s+", "A2o+", "K5s+", "K7o+", "Q7s+", "Q9o+", "J7s+", "J9o+", "T6s+", "96s+", "86s+", "76s", "65s", "54s"],
+    "CO": ["22+", "A2s+", "A2o+", "K6s+", "K8o+", "Q8s+", "QTo+", "J8s+", "JTo", "T7s+", "97s+", "87s", "76s", "65s", "54s"],
+    "HJ": ["22+", "A2s+", "A2o+", "K8s+", "KTo+", "Q9s+", "QTo+", "J9s+", "JTo", "T8s+", "98s", "87s", "76s", "65s", "54s"],
+    "LJ": ["22+", "A2s+", "A2o+", "K9s+", "KTo+", "Q9s+", "QTo+", "J9s+", "JTo", "T8s+", "98s", "87s", "76s", "65s", "54s"],
+    "EP": ["22+", "A2s+", "A2o+", "K9s+", "KTo+", "Q9s+", "QTo+", "J9s+", "JTo", "T8s+", "98s", "87s", "76s", "65s", "54s"],
+    "UTG+1": ["22+", "A2s+", "A2o+", "K9s+", "KTo+", "Q9s+", "QTo+", "J9s+", "JTo", "T8s+", "98s", "87s", "76s", "65s", "54s"],
+    "UTG": ["22+", "A2s+", "A2o+", "K9s+", "KTo+", "Q9s+", "QTo+", "J9s+", "JTo", "T8s+", "98s", "87s", "76s", "65s", "54s"],
+} # Needs to be actually verified and then needs the notation of "+" to be expaned to actual hands
 
-for i in range(len(CARDS)):
-    row = []
-    for j in range(len(CARDS)):
-        if i == j:
-            pair = CARDS[i] + CARDS[j]
-        elif i < j:
-            pair = CARDS[i] + CARDS[j] + "s"
+POSITIONS = list(POSITION_RANGES.keys())
+random_position = random.choice(POSITIONS)
+
+print("Everyone has folded to you in the", random_position)
+num = int(input("How many people are in front of you? "))
+
+
+if num == POSITIONS.index(random_position):
+    print("You are correct")
+else:
+    print("Wrong answer. The correct number is " + str(POSITIONS.index(random_position)))
+
+
+def highlighted_range_chart(range_list):
+    """ Takes a list of poker hands and prints a color-coded grid.
+        Hands in range_list are shown in green, others in red."""
+    card_grid = []
+
+    for i in range(len(CARDS)):
+        row = []
+        for j in range(len(CARDS)):
+            if i == j:
+                pair = CARDS[i] + CARDS[j]
+            elif i < j:
+                pair = CARDS[i] + CARDS[j] + "s"
+            else:
+                pair = CARDS[j] + CARDS[i] + "o"
+
+            # Green if in range_list, red otherwise
+            if pair in range_list:
+                row.append(f"\033[32m{pair}\033[0m")  # Green text
+            else:
+                row.append(f"\033[31m{pair}\033[0m")  # Red text
+        card_grid.append(row)
+
+    for row in card_grid:
+        print(" ".join(row))
+    print("\nLegend: \033[32mGreen\033[0m = In Range, \033[31mRed\033[0m = Out of Range")
+
+# Example usage
+RANGE = ["AA"]
+highlighted_range_chart(RANGE)
+
+def random_hand():
+    """Generates a random poker hand in standard notation."""
+    card1 = random.choice(CARDS)
+    card2 = random.choice(CARDS)
+    if card1 == card2:
+        return card1 + card2
+    else:
+        suited = random.choice([True, False])
+        if suited:
+            if CARDS.index(card1) < CARDS.index(card2):
+                return card1 + card2 + "s"
+            else:
+                return card2 + card1 + "s"
         else:
-            pair = CARDS[j] + CARDS[i] + "o"
-        row.append(pair)
-    card_grid.append(row)
+            if CARDS.index(card1) < CARDS.index(card2):
+                return card1 + card2 + "o"
+            else:
+                return card2 + card1 + "o"
 
-df = pd.DataFrame(card_grid)
-
-PF_RANGE = ["AA", "K7s"]
-
-for i in range(len(PF_RANGE)):
-    if PF_RANGE[i] in df.values:
-        result = df.isin([PF_RANGE[i]])
-        position = result.stack()[result.stack()].index[0]
-        print(f"Found {PF_RANGE[i]} at position: {position}")
-
-print(df)
+# Example usage            
+print(random_hand())
