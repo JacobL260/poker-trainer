@@ -15,17 +15,6 @@ POSITION_RANGES = {
 } # Needs to be actually verified and then needs the notation of "+" to be expaned to actual hands
 
 POSITIONS = list(POSITION_RANGES.keys())
-random_position = random.choice(POSITIONS)
-
-print("Everyone has folded to you in the", random_position)
-num = int(input("How many people are in front of you? "))
-
-
-if num == POSITIONS.index(random_position):
-    print("You are correct")
-else:
-    print("Wrong answer. The correct number is " + str(POSITIONS.index(random_position)))
-
 
 def highlighted_range_chart(range_list):
     """ Takes a list of poker hands and prints a color-coded grid.
@@ -53,10 +42,6 @@ def highlighted_range_chart(range_list):
         print(" ".join(row))
     print("\nLegend: \033[32mGreen\033[0m = In Range, \033[31mRed\033[0m = Out of Range")
 
-# Example usage
-RANGE = ["AA"]
-highlighted_range_chart(RANGE)
-
 def random_hand():
     """Generates a random poker hand in standard notation."""
     card1 = random.choice(CARDS)
@@ -76,5 +61,37 @@ def random_hand():
             else:
                 return card2 + card1 + "o"
 
-# Example usage            
-print(random_hand())
+# ----- Quiz Functions -----
+def question_people_in_front():
+    """Ask: 'How many people are in front of you?'"""
+    position = random.choice(POSITIONS)
+    print(f"Everyone has folded to you in the {position}.")
+    answer = int(input("How many people are in front of you? "))
+    correct = POSITIONS.index(position)
+    if answer == correct:
+        print("Correct! ✅")
+    else:
+        print(f"Wrong. The correct answer is {correct}.")
+
+def question_position_from_people():
+    """Ask: 'If there are X people in front of you, what position are you?'"""
+    num_people = random.randint(0, len(POSITIONS)-1)
+    print(f"There are {num_people} people in front of you.")
+    print(f"The possible positions are: {', '.join(POSITIONS)}")
+    answer = input("Which position are you? ").strip()
+    correct = POSITIONS[num_people]
+    if answer.upper() == correct:
+        print("Correct! ✅")
+    else:
+        print(f"Wrong. The correct answer is {correct}.")
+
+def main():
+    counter = 0
+    questions = [question_people_in_front, question_position_from_people]
+    while True:
+        random.choice(questions)()  # Pick a random question
+        counter = counter + 1
+        print(f"You have answered {counter} questions.\n")
+
+if __name__ == "__main__":
+    main()
