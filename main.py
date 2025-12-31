@@ -1,93 +1,24 @@
 import random
 
+from questions import *
 CARDS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
 
-POSITION_RANGES = {
-    "BB": ["22+", "A2s+", "A5o+", "K9s+", "KTo+", "Q9s+", "QTo+", "J9s+", "JTo", "T8s+", "98s", "87s", "76s", "65s", "54s"],
-    "SB": ["22+", "A2s+", "A2o+", "K7s+", "K9o+", "Q8s+", "QTo+", "J8s+", "JTo", "T7s+", "97s+", "87s", "76s", "65s", "54s"],
-    "BTN": ["22+", "A2s+", "A2o+", "K5s+", "K7o+", "Q7s+", "Q9o+", "J7s+", "J9o+", "T6s+", "96s+", "86s+", "76s", "65s", "54s"],
-    "CO": ["22+", "A2s+", "A2o+", "K6s+", "K8o+", "Q8s+", "QTo+", "J8s+", "JTo", "T7s+", "97s+", "87s", "76s", "65s", "54s"],
-    "HJ": ["22+", "A2s+", "A2o+", "K8s+", "KTo+", "Q9s+", "QTo+", "J9s+", "JTo", "T8s+", "98s", "87s", "76s", "65s", "54s"],
-    "LJ": ["22+", "A2s+", "A2o+", "K9s+", "KTo+", "Q9s+", "QTo+", "J9s+", "JTo", "T8s+", "98s", "87s", "76s", "65s", "54s"],
-    "EP": ["22+", "A2s+", "A2o+", "K9s+", "KTo+", "Q9s+", "QTo+", "J9s+", "JTo", "T8s+", "98s", "87s", "76s", "65s", "54s"],
-    "UTG+1": ["22+", "A2s+", "A2o+", "K9s+", "KTo+", "Q9s+", "QTo+", "J9s+", "JTo", "T8s+", "98s", "87s", "76s", "65s", "54s"],
-    "UTG": ["22+", "A2s+", "A2o+", "K9s+", "KTo+", "Q9s+", "QTo+", "J9s+", "JTo", "T8s+", "98s", "87s", "76s", "65s", "54s"],
-} # Needs to be actually verified and then needs the notation of "+" to be expaned to actual hands
-
-POSITIONS = list(POSITION_RANGES.keys())
-
-def highlighted_range_chart(range_list):
-    """ Takes a list of poker hands and prints a color-coded grid.
-        Hands in range_list are shown in green, others in red."""
-    card_grid = []
-
-    for i in range(len(CARDS)):
-        row = []
-        for j in range(len(CARDS)):
-            if i == j:
-                pair = CARDS[i] + CARDS[j]
-            elif i < j:
-                pair = CARDS[i] + CARDS[j] + "s"
-            else:
-                pair = CARDS[j] + CARDS[i] + "o"
-
-            # Green if in range_list, red otherwise
-            if pair in range_list:
-                row.append(f"\033[32m{pair}\033[0m")  # Green text
-            else:
-                row.append(f"\033[31m{pair}\033[0m")  # Red text
-        card_grid.append(row)
-
-    for row in card_grid:
-        print(" ".join(row))
-    print("\nLegend: \033[32mGreen\033[0m = In Range, \033[31mRed\033[0m = Out of Range")
-
-def random_hand():
-    """Generates a random poker hand in standard notation."""
-    card1 = random.choice(CARDS)
-    card2 = random.choice(CARDS)
-    if card1 == card2:
-        return card1 + card2
-    else:
-        suited = random.choice([True, False])
-        if suited:
-            if CARDS.index(card1) < CARDS.index(card2):
-                return card1 + card2 + "s"
-            else:
-                return card2 + card1 + "s"
-        else:
-            if CARDS.index(card1) < CARDS.index(card2):
-                return card1 + card2 + "o"
-            else:
-                return card2 + card1 + "o"
-
-# ----- Quiz Functions -----
-def question_people_in_front():
-    """Ask: 'How many people are in front of you?'"""
-    position = random.choice(POSITIONS)
-    print(f"Everyone has folded to you in the {position}.")
-    answer = int(input("How many people are in front of you? "))
-    correct = POSITIONS.index(position)
-    if answer == correct:
-        print("Correct! ✅")
-    else:
-        print(f"Wrong. The correct answer is {correct}.")
-
-def question_position_from_people():
-    """Ask: 'If there are X people in front of you, what position are you?'"""
-    num_people = random.randint(0, len(POSITIONS)-1)
-    print(f"There are {num_people} people in front of you.")
-    print(f"The possible positions are: {', '.join(POSITIONS)}")
-    answer = input("Which position are you? ").strip()
-    correct = POSITIONS[num_people]
-    if answer.upper() == correct:
-        print("Correct! ✅")
-    else:
-        print(f"Wrong. The correct answer is {correct}.")
+RFI_RANGES_SHORTHAND = {
+    "BB": ["AA"],
+    "SB": ["22+", "A2s+", "K2s+", "Q2s+", "J2s+", "T2s+", "92s+", "82s+", "72s+", "62s+", "52s+", "42s+", "32s", "A2o+", "K2o+", "Q2o+", "J2o+", "T3o+", "95o+", "85o+", "75o+", "64o+", "54o"],
+    "BTN": ["22+", "A2s+", "K2s+", "Q2s+", "J3s+", "T3s+", "95s+", "85s+,74s+,64s+,53s+,43s,A2o+,K5o+,Q8o+,J8o+,T7o+,97o+,87o"],
+    "CO": ["22+", "A2s+", "K2s+","Q5s+","J7s+","T6s+","96s+","86s+","75s+","65s","54s","A5o+","K9o+","Q9o+","J9o+","T9o"],
+    "HJ": ["22+", "A2s+", "K4s+", "Q8s+", "J8s+", "T7s+", "97s+", "87s", "76s", "65s", "54s", "A8o+", "KTo+", "QTo+", "JTo"],
+    "LJ": ["33+", "A2s+", "K6s+", "Q9s+", "J8s+", "T8s+", "98s", "87s", "76s", "A9o+", "KTo+", "QTo+"],
+    "UTG+2": ["44+", "A2s+", "K8s+", "Q9s+", "J9s+", "T8s+", "98s", "76s", "ATo+", "KTo+"],
+    "UTG+1": ["66+", "A3s+", "K8s+", "Q9s+", "J9s+", "T9s", "98s", "ATo+"],
+    "UTG": ["66+", "A3s+", "K9s+", "Q9s+", "AJo+", "KQo"],
+} # 
 
 def expand_position_ranges(position_ranges):
+    """ Takes a dictionary of position ranges and expands shorthand notation
+    and returns a new dictionary with full hand lists."""
     expanded_ranges = {}
-
     for position in position_ranges:
         hands = position_ranges[position]
         expanded = []
@@ -131,17 +62,105 @@ def expand_position_ranges(position_ranges):
 
     return expanded_ranges
 
+RFI_RANGES = expand_position_ranges(RFI_RANGES_SHORTHAND)
+
+def edge_cases(RFI_RANGES_SHORTHAND):
+    return None
+    
+POSITIONS = list(RFI_RANGES_SHORTHAND.keys())
+
+def range_chart(cards, colored_ranges=None, default_color=None):
+    """
+    Prints a poker range chart.
+
+    cards: list of card ranks (e.g. ["A","K","Q",...,"2"])
+    colored_ranges: list of tuples -> [(set_of_hands, "color_name"), ...]
+    default_color: color for hands not in any range (None = no color)
+    """
+
+    ANSI_COLORS = {
+        "red": "\033[31m",
+        "green": "\033[32m",
+        "yellow": "\033[33m",
+        "blue": "\033[34m",
+        "magenta": "\033[35m",
+        "cyan": "\033[36m",
+        "reset": "\033[0m",
+    }
+
+    colored_ranges = colored_ranges or []
+
+    for i in range(len(cards)):
+        row = []
+        for j in range(len(cards)):
+            # Build hand label
+            if i == j:
+                hand = cards[i] + cards[j]
+            elif i < j:
+                hand = cards[i] + cards[j] + "s"
+            else:
+                hand = cards[j] + cards[i] + "o"
+
+            # Determine color
+            color = default_color
+            for hand_set, hand_color in colored_ranges:
+                if hand in hand_set:
+                    color = hand_color
+                    break
+
+            # Apply color only if requested
+            if color:
+                hand = f"{ANSI_COLORS[color]}{hand}{ANSI_COLORS['reset']}"
+
+            row.append(hand)
+
+        print(" ".join(row))
+
+def random_hand():
+    """Generates a random poker hand in standard notation."""
+    card1 = random.choice(CARDS)
+    card2 = random.choice(CARDS)
+    if card1 == card2:
+        return card1 + card2
+    else:
+        suited = random.choice([True, False])
+        if suited:
+            if CARDS.index(card1) < CARDS.index(card2):
+                return card1 + card2 + "s"
+            else:
+                return card2 + card1 + "s"
+        else:
+            if CARDS.index(card1) < CARDS.index(card2):
+                return card1 + card2 + "o"
+            else:
+                return card2 + card1 + "o"
+
+
+
 def main():
-    expanded = expand_position_ranges(POSITION_RANGES)
-
-    highlighted_range_chart(expanded["UTG"])
-
+    range_chart(CARDS, colored_ranges=[(RFI_RANGES["SB"], "green")])
     counter = 0
     questions = [question_people_in_front, question_position_from_people]
     while True:
         random.choice(questions)()  # Pick a random question
         counter = counter + 1
         print(f"You have answered {counter} questions.\n")
-                
+    """edges = []
+    for position in POSITION_RANGES:
+        hands = POSITION_RANGES[position]
+        for hand in hands:
+            if hand[0] == hand[1]: # Pair
+                if hand != "22":
+                    index = CARDS.index(hand[0])
+                    lower_pair = CARDS[index + 1] + CARDS[index + 1]
+                    edges.append(lower_pair)
+                else:
+                    edges.append(hand)
+            elif hand[1] != "2": # Next lower card
+                index = CARDS.index(hand[1])
+                lower_card = CARDS[index + 1]
+                edges.append(hand[0] + lower_card)
+            else:
+                edges.append(hand)"""
 if __name__ == "__main__":
     main()
