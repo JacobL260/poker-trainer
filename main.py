@@ -1,6 +1,7 @@
 import random
 
 from questions import *
+
 CARDS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
 
 RFI_RANGES_SHORTHAND = {
@@ -64,9 +65,48 @@ def expand_position_ranges(position_ranges):
 
 RFI_RANGES = expand_position_ranges(RFI_RANGES_SHORTHAND)
 
-def edge_cases(RFI_RANGES_SHORTHAND):
-    return None
+def out_of_range_edge_cases(position_ranges):
+    """Given a dictionary of ranges in shorthand notation, returns a dictionary
+    of edge case hands that are just outside the defined ranges for each position.
     
+    Works for worst PAIRS, CONNECTORS, and ONE-CARD-LOWER
+    """
+    edge_cases = {}
+    for position in position_ranges:
+        hands = position_ranges[position]
+        edges = []
+    
+        for hand in hands:
+            index0 = CARDS.index(hand[0])
+            index1 = CARDS.index(hand[1])
+            if hand[0] == hand[1]: # Pair
+                if index0 + 1 < len(CARDS):
+                    lower_pair = CARDS[index0 + 1] + CARDS[index1 + 1]
+                    if lower_pair not in hands:
+                        edges.append(lower_pair)
+            elif abs(index0 - index1) == 1: # Connectors
+                if index0 + 1 < len(CARDS) and index1 + 1 < len(CARDS):
+                    lower_connector = CARDS[index0 + 1] + CARDS[index1 + 1] + hand[2]
+                    if lower_connector not in hands:
+                        edges.append(lower_connector)
+            elif hand[-1] == "+": # Playable hand range "A9s+"
+                if index0 + 1 < len(CARDS) and index1 + 1 < len(CARDS):
+                    lower_hand = hand[0] + CARDS[index1+1] + hand[2] # Do not inlucde "+""
+                    if lower_hand not in hands:
+                        edges.append(lower_hand)            
+                
+
+        unique_edges = []
+        for h in edges:
+            if h not in unique_edges:
+                unique_edges.append(h)
+
+        edge_cases[position] = unique_edges
+
+    return edge_cases
+
+test = out_of_range_edge_cases(RFI_RANGES_SHORTHAND)
+
 POSITIONS = list(RFI_RANGES_SHORTHAND.keys())
 
 def range_chart(cards, colored_ranges=None, default_color=None):
@@ -75,6 +115,7 @@ def range_chart(cards, colored_ranges=None, default_color=None):
 
     cards: list of card ranks (e.g. ["A","K","Q",...,"2"])
     colored_ranges: list of tuples -> [(set_of_hands, "color_name"), ...]
+    (red, green, yellow, blue, magenta, cyan, reset)
     default_color: color for hands not in any range (None = no color)
     """
 
@@ -135,32 +176,15 @@ def random_hand():
             else:
                 return card2 + card1 + "o"
 
-
-
 def main():
-    range_chart(CARDS, colored_ranges=[(RFI_RANGES["SB"], "green")])
+    """range_chart(CARDS, colored_ranges=[(RFI_RANGES["SB"], "green")])
     counter = 0
     questions = [question_people_in_front, question_position_from_people]
     while True:
         random.choice(questions)()  # Pick a random question
         counter = counter + 1
-        print(f"You have answered {counter} questions.\n")
-    """edges = []
-    for position in POSITION_RANGES:
-        hands = POSITION_RANGES[position]
-        for hand in hands:
-            if hand[0] == hand[1]: # Pair
-                if hand != "22":
-                    index = CARDS.index(hand[0])
-                    lower_pair = CARDS[index + 1] + CARDS[index + 1]
-                    edges.append(lower_pair)
-                else:
-                    edges.append(hand)
-            elif hand[1] != "2": # Next lower card
-                index = CARDS.index(hand[1])
-                lower_card = CARDS[index + 1]
-                edges.append(hand[0] + lower_card)
-            else:
-                edges.append(hand)"""
+        print(f"You have answered {counter} questions.\n")"""
+    range_chart(CARDS, [(RFI_RANGES["UTG"],"green"), (test["UTG"],"red")])
+
 if __name__ == "__main__":
     main()
