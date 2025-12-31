@@ -85,13 +85,63 @@ def question_position_from_people():
     else:
         print(f"Wrong. The correct answer is {correct}.")
 
+def expand_position_ranges(position_ranges):
+    expanded_ranges = {}
+
+    for position in position_ranges:
+        hands = position_ranges[position]
+        expanded = []
+
+        for hand in hands:
+            if len(hand) == 3 and hand[0] == hand[1] and hand[2] == "+":
+                start_index = CARDS.index(hand[0])
+
+                for i in range(start_index + 1):
+                    card = CARDS[i]
+                    expanded.append(card + card)
+
+            elif len(hand) == 4 and hand[2] == "s" and hand[3] == "+":
+                high_card = hand[0]
+                start_index = CARDS.index(hand[1])
+
+                for i in range(start_index + 1):
+                    low_card = CARDS[i]
+                    if low_card != high_card:
+                        expanded.append(high_card + low_card + "s")
+
+            elif len(hand) == 4 and hand[2] == "o" and hand[3] == "+":
+                high_card = hand[0]
+                start_index = CARDS.index(hand[1])
+
+                for i in range(start_index + 1):
+                    low_card = CARDS[i]
+                    if low_card != high_card:
+                        expanded.append(high_card + low_card + "o")
+
+            else:
+                expanded.append(hand)
+
+        # remove duplicates, keep order
+        unique_expanded = []
+        for h in expanded:
+            if h not in unique_expanded:
+                unique_expanded.append(h)
+
+        expanded_ranges[position] = unique_expanded
+
+    return expanded_ranges
+
 def main():
+    expanded = expand_position_ranges(POSITION_RANGES)
+
+    highlighted_range_chart(expanded["UTG"])
+
     counter = 0
     questions = [question_people_in_front, question_position_from_people]
     while True:
         random.choice(questions)()  # Pick a random question
         counter = counter + 1
         print(f"You have answered {counter} questions.\n")
-
+                
 if __name__ == "__main__":
     main()
