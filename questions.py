@@ -1,6 +1,6 @@
 import random
 
-from main import POSITIONS
+from data import POSITIONS
 
 def question_people_in_front():
     """Ask: 'How many people are in front of you?'"""
