@@ -1,5 +1,5 @@
 import random
-from data import *
+from constants import CARDS
 
 def range_chart(cards, colored_ranges=None, default_color=None):
     """

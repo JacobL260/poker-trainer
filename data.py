@@ -1,4 +1,4 @@
-CARDS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
+from utils import out_of_range_edge_cases, expand_position_ranges
 
 RFI_RANGES_SHORTHAND = {
     "BB": ["AA"],
@@ -12,4 +12,8 @@ RFI_RANGES_SHORTHAND = {
     "UTG": ["66+", "A3s+", "K9s+", "Q9s+", "AJo+", "KQo"],
 }
 
+RFI_RANGES = expand_position_ranges(RFI_RANGES_SHORTHAND)
+
 POSITIONS = list(RFI_RANGES_SHORTHAND.keys())
+
+RFI_RANGES_OUTSIDE = out_of_range_edge_cases(RFI_RANGES)

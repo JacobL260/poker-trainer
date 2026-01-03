@@ -1,6 +1,8 @@
 import random
 
-from data import POSITIONS
+from constants import *
+from data import *
+from utils import *
 
 def question_people_in_front():
     """Ask: 'How many people are in front of you?'"""
@@ -25,3 +27,21 @@ def question_position_from_people():
         print("Correct! ✅")
     else:
         print(f"Wrong. The correct answer is {correct}.")
+
+def question_out_of_range():
+    """Ask: 'If this hand is given to you in the POSITION first to act, should you raise?'"""
+    position = random.choice(POSITIONS)
+    print(f"You are the {position} and first to act.")
+
+    hand = random.choice(RFI_RANGES_OUTSIDE[position])
+    print(f"You are dealt: {hand}")
+
+    answer = input("Y/N: ")
+    if answer.upper() == "N":
+        print("Correct! ✅")
+    else:
+        print("WRONG ❌")
+        range_chart(
+            CARDS,
+            [(RFI_RANGES[position], "green")]
+        )
