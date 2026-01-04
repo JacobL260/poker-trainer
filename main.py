@@ -11,7 +11,7 @@ def main():
     range_chart(CARDS, [(RFI_RANGES["UTG"],"green"), (test["UTG"],"red")])
     range_chart(CARDS, colored_ranges=[(RFI_RANGES["SB"], "green")])"""
     counter = 0
-    questions = [question_out_of_range]
+    questions = [question_out_of_range, question_in_of_range]
     while True:
         random.choice(questions)()  # Pick a random question
         counter = counter + 1

@@ -36,7 +36,7 @@ def question_out_of_range():
     hand = random.choice(RFI_RANGES_OUTSIDE[position])
     print(f"You are dealt: {hand}")
 
-    answer = input("Y/N: ")
+    answer = input("Should you raise? Y/N : ")
     if answer.upper() == "N":
         print("Correct! ✅")
     else:
@@ -46,4 +46,22 @@ def question_out_of_range():
             [(RFI_RANGES_OUTSIDE[position], "red"), (RFI_RANGES[position], "green")]
         )
         print(RFI_RANGES_OUTSIDE[position])
+        print(RFI_RANGES[position])
+
+def question_in_of_range():
+    position = random.choice(POSITIONS)
+    print(f"You are the {position} and first to act.")
+
+    hand = random.choice(RFI_RANGES[position])
+    print(f"You are dealt: {hand}")
+
+    answer = input("Should you raise? Y/N : ")
+    if answer.upper() == "Y":
+        print("Correct! ✅")
+    else:
+        print("WRONG ❌")
+        range_chart(
+            CARDS,
+            [(RFI_RANGES[position], "green")]
+        )
         print(RFI_RANGES[position])
