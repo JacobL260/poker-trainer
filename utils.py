@@ -145,9 +145,17 @@ def out_of_range_edge_cases(position_ranges):
                         lower_connector = CARDS[index0 + 1] + CARDS[index1 + 1] + hand[2]
                         if lower_connector not in hands:
                             edges.append(lower_connector)
-                lower_hand = hand[0] + CARDS[index1 + 1] + suit
-                if lower_hand not in hands:
-                    edges.append(lower_hand)
+                            
+                    lower_hand = hand[0] + CARDS[index1 + 1] + suit
+                    lower_rank = CARDS[index1 + 1]
+
+                    if hand[0] == lower_rank:
+                        lower_hand = hand[0] + lower_rank
+                    else:
+                        lower_hand = hand[0] + lower_rank + suit
+
+                    if lower_hand not in hands:
+                        edges.append(lower_hand)
 
         unique_edges = []
         for h in edges:

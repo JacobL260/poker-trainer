@@ -43,5 +43,7 @@ def question_out_of_range():
         print("WRONG ❌")
         range_chart(
             CARDS,
-            [(RFI_RANGES[position], "green")]
+            [(RFI_RANGES_OUTSIDE[position], "red"), (RFI_RANGES[position], "green")]
         )
+        print(RFI_RANGES_OUTSIDE[position])
+        print(RFI_RANGES[position])
