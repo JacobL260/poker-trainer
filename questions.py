@@ -30,7 +30,7 @@ def question_position_from_people():
 
 def question_out_of_range():
     """Ask: 'If this hand is given to you in the POSITION first to act, should you raise?'"""
-    position = random.choice(POSITIONS)
+    position = random.choice(POSITIONS[1:])
     print(f"You are the {position} and first to act.")
 
     hand = random.choice(RFI_RANGES_OUTSIDE[position])
@@ -45,11 +45,10 @@ def question_out_of_range():
             CARDS,
             [(RFI_RANGES_OUTSIDE[position], "red"), (RFI_RANGES[position], "green")]
         )
-        print(RFI_RANGES_OUTSIDE[position])
-        print(RFI_RANGES[position])
 
 def question_in_of_range():
-    position = random.choice(POSITIONS)
+    """Ask: 'If this hand is given to you in the POSITION first to act, should you raise?'"""
+    position = random.choice(POSITIONS[1:])
     print(f"You are the {position} and first to act.")
 
     hand = random.choice(RFI_RANGES[position])
@@ -64,4 +63,3 @@ def question_in_of_range():
             CARDS,
             [(RFI_RANGES[position], "green")]
         )
-        print(RFI_RANGES[position])
